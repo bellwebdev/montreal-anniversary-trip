@@ -1,0 +1,7 @@
+name = "montreal-anniversary-trip"
+pages_build_output_dir = "build/client"
+compatibility_date = "2025-06-17"
+
+[[kv_namespaces]]
+binding = "CHOICES_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"

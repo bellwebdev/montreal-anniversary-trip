@@ -1,0 +1,13 @@
+.errorMain {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+}
+
+.stack {
+  width: 100%;
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: var(--color-parchment-100);
+  border-radius: 0.5rem;
+}

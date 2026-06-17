@@ -1,87 +1,77 @@
-# Welcome to React Router!
+# Montréal Anniversary Trip
 
-A modern, production-ready template for building full-stack React applications using React Router.
+An interactive itinerary for our Montréal anniversary trip (June 25–29), built with React Router v7 and deployed as a fully static site on Cloudflare Pages.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Stack
 
-## Features
+- React Router v7, fully static export (`ssr: false` + `prerender` in `react-router.config.ts`) — no Node server needed at runtime.
+- Plain CSS + CSS Modules for styling (no Tailwind).
+- A single Cloudflare Pages Function (`functions/api/choices.ts`) backed by Cloudflare KV, so both of us see the same picks for the "choose your own adventure" moments (Day 3 add-on, Day 4 afternoon activity) instead of each phone having its own answer.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
+## Local development
 
 ```bash
 npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+App runs at `http://localhost:5173`. Note: plain `npm run dev` does **not** run the `/api/choices` Pages Function — the choice buttons still work and save to `localStorage`, they just won't sync between devices until deployed (or run via `wrangler pages dev`, see below).
 
-## Building for Production
-
-Create a production build:
+To test the full thing locally, including the shared KV-backed sync:
 
 ```bash
-npm run build
+npm run pages:dev
 ```
 
-## Deployment
+This builds the static site and serves it through `wrangler pages dev`, which simulates the Pages Function and KV locally (no real Cloudflare account needed for this).
 
-### Docker Deployment
+## Deploying to Cloudflare Pages
 
-To build and run using Docker:
+### 1. Push to GitHub
+
+Push this repo to GitHub (Cloudflare Pages deploys from a Git connection).
+
+### 2. Create a KV namespace
+
+One-time setup, needed so both of you see the same selections:
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+npx wrangler login
+npx wrangler kv namespace create CHOICES_KV
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+This prints an `id`. Copy it into `wrangler.toml`, replacing `REPLACE_WITH_YOUR_KV_NAMESPACE_ID`.
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+### 3. Connect the repo in the Cloudflare dashboard
 
-### DIY Deployment
+In the Cloudflare dashboard → Workers & Pages → Create → Pages → connect to this GitHub repo, with:
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
+- **Build command:** `npm run build`
+- **Build output directory:** `build/client`
 
-Make sure to deploy the output of `npm run build`
+### 4. Bind the KV namespace to the Pages project
+
+In the Pages project → Settings → Functions → KV namespace bindings, add:
+
+- **Variable name:** `CHOICES_KV`
+- **KV namespace:** the one created in step 2
+
+Add this for both the Production and Preview environments.
+
+### 5. Deploy
+
+Push to your main branch (or trigger a deploy from the dashboard). Cloudflare builds and serves the static site, and the `functions/api/choices.ts` Pages Function picks up the KV binding automatically.
+
+No backend hosting, no ongoing cost — this all runs on Cloudflare's free tier.
+
+## Project structure
 
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+app/
+  data/itinerary.ts       # All itinerary content (days, sections, choices)
+  routes/                 # Overview, day detail, and food & culture pages
+  components/             # ActivityCard, ChoicePicker, Layout (nav)
+  lib/useChoice.ts         # Hook syncing a choice via /api/choices + localStorage fallback
+functions/api/choices.ts  # Cloudflare Pages Function (GET/POST) backed by KV
+wrangler.toml             # Cloudflare Pages config + KV namespace binding
 ```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.

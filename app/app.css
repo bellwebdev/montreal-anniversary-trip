@@ -1,15 +1,66 @@
-@import "tailwindcss";
+/* Old Montréal palette: cobblestone parchment, deep harbor blue, copper/terracotta accent */
+:root {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-parchment-50: #fdfbf7;
+  --color-parchment-100: #f7f1e7;
+  --color-parchment-200: #ede2cd;
+  --color-parchment-300: #ddcdaa;
+  --color-parchment-400: #c7af82;
+
+  --color-harbor-50: #eef2f6;
+  --color-harbor-100: #d3dee8;
+  --color-harbor-200: #a7bdd1;
+  --color-harbor-300: #7b9bba;
+  --color-harbor-400: #4f7aa3;
+  --color-harbor-500: #2c5478;
+  --color-harbor-600: #234363;
+  --color-harbor-700: #1a324a;
+  --color-harbor-800: #122231;
+  --color-harbor-900: #091119;
+
+  --color-copper-50: #fbf1ec;
+  --color-copper-100: #f5ddd1;
+  --color-copper-200: #e9bba3;
+  --color-copper-300: #dc9875;
+  --color-copper-400: #d07647;
+  --color-copper-500: #bd5a2c;
+  --color-copper-600: #9c4823;
+  --color-copper-700: #7a381b;
+  --color-copper-800: #582813;
+  --color-copper-900: #36180b;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-parchment-50);
+  color: var(--color-harbor-900);
+  font-family: var(--font-sans);
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
 }
