@@ -4,7 +4,7 @@ import { ChoicePicker } from "./ChoicePicker";
 import styles from "./ActivityCard.module.css";
 
 export function ActivityCard({ section }: { section: Section }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className={styles.card}>
