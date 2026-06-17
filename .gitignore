@@ -5,3 +5,6 @@
 # React Router
 /.react-router/
 /build/
+
+# Wrangler local state (Cloudflare auth, local KV/dev simulation data)
+/.wrangler/
