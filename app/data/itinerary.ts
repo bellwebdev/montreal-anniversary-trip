@@ -19,6 +19,17 @@ export type Section = {
   anchor?: boolean;
 };
 
+export type MealPeriod = "Breakfast" | "Lunch" | "Dinner";
+
+export type MealSlot = {
+  period: MealPeriod;
+  anchor?: boolean;
+  /** Pickable real venue options, synced via /api/choices. Omit for a generic meal with no choice. */
+  choice?: Choice;
+  /** Plain description shown instead of a choice (e.g. "wander the market and grab whatever looks good"). */
+  note?: string;
+};
+
 export type Day = {
   id: number;
   date: string;
@@ -27,6 +38,7 @@ export type Day = {
   vibe?: string;
   isAnniversary?: boolean;
   sections: Section[];
+  meals?: MealSlot[];
 };
 
 export const tripDates = "June 25 – June 29";
@@ -67,8 +79,33 @@ export const days: Day[] = [
           "Arrive and check in",
           "Light walk in Old Montréal",
           "Explore cobblestone streets and waterfront",
-          "Optional coffee or dessert stop",
         ],
+      },
+    ],
+    meals: [
+      {
+        period: "Dinner",
+        choice: {
+          id: "day1-dinner",
+          prompt: "First night in Old Montréal — where should we eat?",
+          options: [
+            {
+              id: "modavie",
+              label: "Modavie",
+              description: "French/Mediterranean bistro on Saint-Paul St., live jazz most nights",
+            },
+            {
+              id: "bevo",
+              label: "Bevo",
+              description: "Buzzy, casual Italian — brick walls, no-fuss pizza",
+            },
+            {
+              id: "marche-eclusiers",
+              label: "Marché des Éclusiers",
+              description: "Waterfront food hall — local vendors, gourmet tacos, shareable bites",
+            },
+          ],
+        },
       },
     ],
   },
@@ -81,34 +118,71 @@ export const days: Day[] = [
       {
         id: "d2-morning",
         heading: "Morning — Little Italy",
-        items: [
-          "Coffee and pastry stop",
-          "Slow walk through Italian cafés and bakeries",
-          "Light neighborhood exploration",
-        ],
+        items: ["Slow walk through Italian cafés and bakeries", "Light neighborhood exploration"],
       },
       {
         id: "d2-midday",
         heading: "Midday — Jean-Talon Market",
-        items: [
-          "Fresh produce market experience",
-          "Local cheeses, baked goods, and food stalls",
-          "Casual lunch from vendors",
-        ],
+        items: ["Fresh produce market experience", "Local cheeses, baked goods, and food stalls"],
       },
       {
         id: "d2-afternoon",
-        heading: "Afternoon — Plateau Mont-Royal (Optional Wandering)",
-        items: [
-          "Street art and murals",
-          "Small cafés and shops",
-          "Relaxed walking, no fixed route",
-        ],
+        heading: "Afternoon Exploring — Plateau Mont-Royal",
+        items: ["Street art and murals", "Small cafés and shops", "Relaxed walking, no fixed route"],
+      },
+    ],
+    meals: [
+      {
+        period: "Breakfast",
+        choice: {
+          id: "day2-breakfast",
+          prompt: "Little Italy breakfast — pick a spot:",
+          options: [
+            {
+              id: "caffe-italia",
+              label: "Caffè Italia",
+              description: "Institution since 1956 — espresso, eggs Benedict, cannoli",
+            },
+            {
+              id: "parma-cafe",
+              label: "Parma Café",
+              description: "Cozy spot near Jean-Talon Market, great coffee and sandwiches",
+            },
+            {
+              id: "antipode",
+              label: "Antipode",
+              description: "Lively brunch — eggs Benedict, croque tartiflette, shakshuka",
+            },
+          ],
+        },
       },
       {
-        id: "d2-evening",
-        heading: "Evening — Casual Dinner (Plateau Area)",
-        note: "Flexible walk-in dinner depending on energy level.",
+        period: "Lunch",
+        note: "Casual lunch from Jean-Talon Market vendors — wander the stalls and grab whatever looks good.",
+      },
+      {
+        period: "Dinner",
+        choice: {
+          id: "day2-dinner",
+          prompt: "Casual dinner in the Plateau — pick a spot:",
+          options: [
+            {
+              id: "chez-victoire",
+              label: "Chez Victoire",
+              description: "French-inspired seasonal market cuisine, smoked-meat burger",
+            },
+            {
+              id: "bungalow",
+              label: "Bungalow",
+              description: "Neighborhood favorite — Québécois, French, and Mediterranean flavors",
+            },
+            {
+              id: "le-ptit-plateau",
+              label: "Le P'tit Plateau",
+              description: "Cozy regional French bistro with a personal touch",
+            },
+          ],
+        },
       },
     ],
   },
@@ -122,16 +196,12 @@ export const days: Day[] = [
         id: "d3-morning",
         heading: "Morning — Botanical Garden",
         anchor: true,
-        items: [
-          "Themed gardens and greenhouses",
-          "Slow walking and photography",
-          "Relaxed exploration",
-        ],
+        items: ["Themed gardens and greenhouses", "Slow walking and photography", "Relaxed exploration"],
       },
       {
         id: "d3-midday",
         heading: "Midday Break",
-        items: ["Coffee or light snack", "Rest period (no fixed plan)"],
+        items: ["Rest period (no fixed plan)"],
       },
       {
         id: "d3-afternoon",
@@ -152,14 +222,84 @@ export const days: Day[] = [
           options: [
             { id: "science", label: "Science center" },
             { id: "arts", label: "Fine arts museum" },
-            { id: "skip", label: "Skip entirely", description: "Rest and recharge instead" },
+            {
+              id: "skip",
+              label: "Skip entirely",
+              description: "Rest and recharge instead",
+            },
           ],
         },
       },
       {
         id: "d3-evening",
         heading: "Evening — Return to Plateau",
-        items: ["Casual dinner without reservations", "Relaxed neighborhood walk"],
+        items: ["Relaxed neighborhood walk"],
+      },
+    ],
+    meals: [
+      {
+        period: "Breakfast",
+        choice: {
+          id: "day3-breakfast",
+          prompt: "Quick breakfast before the Botanical Garden — pick a spot:",
+          options: [
+            { id: "cafe-replika", label: "Café Replika" },
+            { id: "pigeon-cafe", label: "Pigeon Cafe" },
+            {
+              id: "piel-canela",
+              label: "Piel Canela",
+              description: "Festive brunch spot — mimosas included",
+            },
+          ],
+        },
+      },
+      {
+        period: "Lunch",
+        choice: {
+          id: "day3-lunch",
+          prompt: "Lunch between the Botanical Garden and Biodome — pick a spot:",
+          options: [
+            {
+              id: "espace-pour-la-vie",
+              label: "Espace pour la vie restaurant",
+              description: "On-site, vegetarian, seasonal — no need to leave the gardens",
+            },
+            {
+              id: "le-toit-rouge",
+              label: "Le Toit Rouge",
+              description: "Casual neighborhood spot right between the two attractions",
+            },
+            {
+              id: "helicoptere",
+              label: "Hélicoptère",
+              description: "If you want a proper sit-down meal — seasonal Hochelaga tasting menu",
+            },
+          ],
+        },
+      },
+      {
+        period: "Dinner",
+        choice: {
+          id: "day3-dinner",
+          prompt: "Back in the Plateau for dinner — pick a spot:",
+          options: [
+            {
+              id: "au-pied-de-cochon",
+              label: "Au Pied de Cochon",
+              description: "Montreal institution — foie gras and pork, iconic Québécois indulgence",
+            },
+            {
+              id: "rotisserie-la-lune",
+              label: "Rôtisserie La Lune",
+              description: "Casual rotisserie chicken bistro from the Mon Lapin team",
+            },
+            {
+              id: "barranco",
+              label: "Barranco",
+              description: "Warm Peruvian spot — ceviche, colorful setting, change of pace",
+            },
+          ],
+        },
       },
     ],
   },
@@ -173,16 +313,12 @@ export const days: Day[] = [
       {
         id: "d4-morning",
         heading: "Morning",
-        items: ["No schedule", "Slow start with coffee and light breakfast"],
+        items: ["No schedule"],
       },
       {
         id: "d4-midday",
         heading: "Midday",
-        items: [
-          "Free wandering in Plateau or Mile End",
-          "Café stops, bakeries, parks, or casual exploration",
-          "Entirely mood-based",
-        ],
+        items: ["Free wandering in Plateau or Mile End", "Parks and casual exploration", "Entirely mood-based"],
       },
       {
         id: "d4-afternoon",
@@ -202,23 +338,93 @@ export const days: Day[] = [
               label: "Mount Royal viewpoint",
               description: "Skyline views",
             },
+            {
+              id: "rest-recharge",
+              label: "Rest and Recharge",
+              description: "Head back to the BnB and chill",
+            },
           ],
         },
       },
       {
-        id: "d4-evening",
-        heading: "Evening — Anniversary Dinner (Fixed)",
-        anchor: true,
-        items: [
-          "Plateau Mont-Royal French/Québécois bistro dinner",
-          "Cozy, intimate dining experience",
-          "Seasonal cuisine with French influence and Québec ingredients",
-        ],
-      },
-      {
         id: "d4-post",
         heading: "Post-Dinner",
-        items: ["Optional slow walk through Plateau streets", "Coffee or dessert if desired"],
+        items: ["Slow walk through Plateau streets"],
+      },
+    ],
+    meals: [
+      {
+        period: "Breakfast",
+        choice: {
+          id: "day4-breakfast",
+          prompt: "Slow start in Mile End — pick a spot:",
+          options: [
+            {
+              id: "st-viateur-bagel",
+              label: "St-Viateur Bagel",
+              description: "The original, wood-fired, since 1957",
+            },
+            {
+              id: "fairmount-bagel",
+              label: "Fairmount Bagel",
+              description: "The oldest bagel shop in Montreal, since 1919",
+            },
+            {
+              id: "beautys",
+              label: "Beautys Luncheonette",
+              description: "Iconic diner since 1942 — try the Beauty Special",
+            },
+          ],
+        },
+      },
+      {
+        period: "Lunch",
+        choice: {
+          id: "day4-lunch",
+          prompt: "Wherever the wandering takes us — pick a lunch vibe:",
+          options: [
+            {
+              id: "sparrow",
+              label: "Sparrow",
+              description: "Middle Eastern-leaning brunch — Turkish eggs, shakshuka",
+            },
+            {
+              id: "aux-vivres",
+              label: "Aux Vivres",
+              description: "Montreal's beloved vegan spot — Golden Pancakes, smoothies",
+            },
+            {
+              id: "falafel-yoni",
+              label: "Falafel Yoni",
+              description: "Quick falafel counter, great Sabich sandwich",
+            },
+          ],
+        },
+      },
+      {
+        period: "Dinner",
+        anchor: true,
+        choice: {
+          id: "day4-dinner",
+          prompt: "Tonight's the big one — our cozy, intimate anniversary dinner. Pick the spot:",
+          options: [
+            {
+              id: "lexpress",
+              label: "L'Express",
+              description: "Montreal institution since 1980 — classic French bistro, steak tartare",
+            },
+            {
+              id: "casavant",
+              label: "Casavant",
+              description: "Intimate Art Deco French bistro — beef tartare, seasonal tartelette",
+            },
+            {
+              id: "estelle",
+              label: "Estelle",
+              description: "Contemporary Plateau bistro — sleek, seasonal, curated wine list",
+            },
+          ],
+        },
       },
     ],
   },
@@ -231,7 +437,33 @@ export const days: Day[] = [
       {
         id: "d5-morning",
         heading: "Slow Morning",
-        items: ["Coffee and packing", "Departure"],
+        items: ["Packing", "Departure"],
+      },
+    ],
+    meals: [
+      {
+        period: "Breakfast",
+        choice: {
+          id: "day5-breakfast",
+          prompt: "Quick coffee before we head out — pick a spot:",
+          options: [
+            {
+              id: "dispatch-coffee",
+              label: "Dispatch Coffee",
+              description: "Great cold brew and pastries, Plateau location",
+            },
+            {
+              id: "cafe-olimpico",
+              label: "Café Olimpico",
+              description: "Legendary Mile End espresso bar",
+            },
+            {
+              id: "la-distributrice",
+              label: "La Distributrice",
+              description: "Tiny grab-and-go window near Mont-Royal metro — fastest if we're rushing",
+            },
+          ],
+        },
       },
     ],
   },

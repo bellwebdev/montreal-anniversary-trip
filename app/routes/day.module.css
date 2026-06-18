@@ -40,6 +40,16 @@
   color: var(--color-harbor-600);
 }
 
+.meals {
+  margin-top: 2rem;
+}
+
+.mealsHeading {
+  font-size: 1.25rem;
+  color: var(--color-harbor-800);
+  margin-bottom: 1rem;
+}
+
 .sections {
   margin-top: 2rem;
   display: flex;

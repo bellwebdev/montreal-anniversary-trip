@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import type { Route } from "./+types/day";
 import { days } from "../data/itinerary";
 import { ActivityCard } from "../components/ActivityCard";
+import { Meals } from "../components/Meals";
 import styles from "./day.module.css";
 
 export function meta({ params }: Route.MetaArgs) {
@@ -33,6 +34,13 @@ export default function DayPage() {
       <p className={styles.subtitle}>{day.subtitle}</p>
       {day.isAnniversary && <span className={styles.anniversaryBadge}>♥ Anniversary Day</span>}
       {day.vibe && <p className={styles.vibe}>{day.vibe}</p>}
+
+      {day.meals && day.meals.length > 0 && (
+        <div className={styles.meals}>
+          <h2 className={styles.mealsHeading}>Today's Meals</h2>
+          <Meals key={day.id} meals={day.meals} />
+        </div>
+      )}
 
       <div className={styles.sections}>
         {day.sections.map((section) => (

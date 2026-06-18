@@ -4,7 +4,20 @@ interface Env {
   CHOICES_KV: KVNamespace;
 }
 
-const ALLOWED_KEYS = ["day3-addon", "day4-afternoon"];
+const ALLOWED_KEYS = [
+  "day3-addon",
+  "day4-afternoon",
+  "day1-dinner",
+  "day2-breakfast",
+  "day2-dinner",
+  "day3-breakfast",
+  "day3-lunch",
+  "day3-dinner",
+  "day4-breakfast",
+  "day4-lunch",
+  "day4-dinner",
+  "day5-breakfast",
+];
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   const entries = await Promise.all(

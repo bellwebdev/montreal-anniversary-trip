@@ -14,15 +14,15 @@ export default function Layout() {
           <NavLink to="/" end className={linkClass}>
             Overview
           </NavLink>
+          <NavLink to="/culture" className={linkClass}>
+            Food &amp; Culture
+          </NavLink>
           {days.map((day) => (
             <NavLink key={day.id} to={`/day/${day.id}`} className={linkClass}>
               Day {day.id}
               {day.isAnniversary ? " ♥" : ""}
             </NavLink>
           ))}
-          <NavLink to="/culture" className={linkClass}>
-            Food &amp; Culture
-          </NavLink>
         </nav>
       </header>
       <Outlet />
