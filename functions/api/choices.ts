@@ -14,7 +14,6 @@ const ALLOWED_KEYS = [
   "day3-post-garden",
   "day4-breakfast",
   "day4-pre-dinner",
-  "day5-breakfast",
 ];
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {

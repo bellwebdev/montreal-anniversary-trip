@@ -5,3 +5,8 @@ compatibility_date = "2025-06-17"
 [[kv_namespaces]]
 binding = "CHOICES_KV"
 id = "1834e7041e0e4da7975cd956a3fc6cee"
+
+[[d1_databases]]
+binding = "REVIEWS_DB"
+database_name = "trip-reviews"
+database_id = "6d94032c-9f13-4540-b746-a8a9005e5981"

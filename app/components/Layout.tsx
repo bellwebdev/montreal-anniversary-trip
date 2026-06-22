@@ -53,6 +53,9 @@ export default function Layout() {
                 </NavLink>
               ),
             )}
+            <NavLink to="/reviews" className={linkClass}>
+              Reviews
+            </NavLink>
           </nav>
         </div>
       </header>

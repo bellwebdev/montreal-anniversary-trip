@@ -464,52 +464,6 @@ export const days: Day[] = [
       },
     ],
   },
-  {
-    id: 5,
-    date: "June 29",
-    title: "Quiet Exit",
-    subtitle: "Departure Morning",
-    unlockDate: "2026-06-29",
-    sections: [
-      {
-        id: "d5-morning",
-        heading: "Slow Morning",
-        items: ["Packing", "Departure"],
-      },
-    ],
-    meals: [
-      {
-        period: "Breakfast",
-        choice: {
-          id: "day5-breakfast",
-          prompt: "Quick coffee before we head out — pick a spot:",
-          options: [
-            {
-              id: "dispatch-coffee",
-              label: "Dispatch Coffee",
-              description: "Great cold brew and pastries, Plateau location",
-              mapQuery: "Dispatch Coffee, Montreal, QC",
-              rating: { score: 4.3 },
-            },
-            {
-              id: "cafe-olimpico",
-              label: "Café Olimpico",
-              description: "Legendary Mile End espresso bar",
-              mapQuery: "Café Olimpico, Montreal, QC",
-              rating: { score: 4.7, count: "3k+" },
-            },
-            {
-              id: "la-distributrice",
-              label: "La Distributrice",
-              description: "Tiny grab-and-go window near Mont-Royal metro — fastest if we're rushing (double-check it's still open before counting on it)",
-              mapQuery: "La Distributrice, Montreal, QC",
-              rating: { score: 4.7, count: "129" },
-            },
-          ],
-        },
-      },
-    ],
-  },
 ];
 
 export const foodIdentity = {

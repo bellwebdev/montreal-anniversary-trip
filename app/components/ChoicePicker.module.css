@@ -34,6 +34,13 @@
   border-color: var(--color-copper-300);
 }
 
+@media (max-width: 640px) {
+  .option {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 .optionSelected {
   border-color: var(--color-copper-500);
   background-color: var(--color-copper-500);
