@@ -1,9 +1,11 @@
 import { useChoice } from "../lib/useChoice";
 import type { Choice } from "../data/itinerary";
+import { RatingBadge } from "./RatingBadge";
 import styles from "./ChoicePicker.module.css";
 
 export function ChoicePicker({ choice }: { choice: Choice }) {
   const { value, select, hydrated } = useChoice(choice.id);
+  const selectedOption = hydrated ? choice.options.find((option) => option.id === value) : undefined;
 
   return (
     <div className={styles.wrapper}>
@@ -19,6 +21,7 @@ export function ChoicePicker({ choice }: { choice: Choice }) {
               className={selected ? `${styles.option} ${styles.optionSelected}` : styles.option}
             >
               {option.label}
+              {option.rating && <RatingBadge rating={option.rating} />}
               {option.description && (
                 <span className={styles.optionDescription}>— {option.description}</span>
               )}
@@ -26,7 +29,21 @@ export function ChoicePicker({ choice }: { choice: Choice }) {
           );
         })}
       </div>
-      {hydrated && value && <p className={styles.savedNote}>Saved on this device — change anytime.</p>}
+      {selectedOption && (
+        <div className={styles.selectedInfo}>
+          <p className={styles.savedNote}>Saved on this device — change anytime.</p>
+          {selectedOption.mapQuery && (
+            <a
+              className={styles.directionsLink}
+              href={`https://maps.apple.com/?q=${encodeURIComponent(selectedOption.mapQuery)}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Get Directions →
+            </a>
+          )}
+        </div>
+      )}
     </div>
   );
 }

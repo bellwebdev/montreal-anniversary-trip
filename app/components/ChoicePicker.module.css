@@ -25,6 +25,7 @@
   color: var(--color-harbor-700);
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
+  text-align: left;
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
@@ -44,8 +45,26 @@
   opacity: 0.7;
 }
 
-.savedNote {
+.selectedInfo {
   margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.savedNote {
   font-size: 0.75rem;
   color: var(--color-harbor-500);
+}
+
+.directionsLink {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-copper-600);
+  text-decoration: none;
+}
+
+.directionsLink:hover {
+  text-decoration: underline;
 }

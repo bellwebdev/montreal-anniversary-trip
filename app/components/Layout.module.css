@@ -7,15 +7,56 @@
   backdrop-filter: blur(6px);
 }
 
-.nav {
+.bar {
   margin: 0 auto;
   max-width: 56rem;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+
+.menuToggle {
+  display: none;
+  border: 1px solid var(--color-parchment-300);
+  background-color: white;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--color-harbor-700);
+  cursor: pointer;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
   gap: 0.25rem;
   overflow-x: auto;
-  padding: 0.75rem 1rem;
   font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .menuToggle {
+    display: inline-flex;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .navOpen {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    overflow-x: visible;
+    gap: 0.25rem;
+  }
+
+  .navOpen .link {
+    text-align: left;
+  }
 }
 
 .link {
@@ -34,6 +75,12 @@
 .linkActive {
   background-color: var(--color-harbor-700);
   color: white;
+}
+
+.linkLocked {
+  cursor: not-allowed;
+  color: var(--color-harbor-400);
+  opacity: 0.6;
 }
 
 .footer {

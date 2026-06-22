@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router";
 import type { Route } from "./+types/day";
-import { days } from "../data/itinerary";
+import { days, isDayLocked } from "../data/itinerary";
 import { ActivityCard } from "../components/ActivityCard";
 import { Meals } from "../components/Meals";
 import styles from "./day.module.css";
@@ -18,6 +18,15 @@ export default function DayPage() {
     return (
       <div className={styles.notFound}>
         <h1>Day not found</h1>
+        <Link to="/">Back to overview</Link>
+      </div>
+    );
+  }
+
+  if (isDayLocked(day)) {
+    return (
+      <div className={styles.notFound}>
+        <h1>Not yet — unlocks {day.date}</h1>
         <Link to="/">Back to overview</Link>
       </div>
     );

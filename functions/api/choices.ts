@@ -6,16 +6,14 @@ interface Env {
 
 const ALLOWED_KEYS = [
   "day3-addon",
-  "day4-afternoon",
   "day1-dinner",
   "day2-breakfast",
   "day2-dinner",
-  "day3-breakfast",
   "day3-lunch",
   "day3-dinner",
+  "day3-post-garden",
   "day4-breakfast",
-  "day4-lunch",
-  "day4-dinner",
+  "day4-pre-dinner",
   "day5-breakfast",
 ];
 

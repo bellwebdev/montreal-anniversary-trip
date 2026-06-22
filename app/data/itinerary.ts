@@ -1,7 +1,16 @@
+export type Rating = {
+  score: number;
+  count?: string;
+};
+
 export type ChoiceOption = {
   id: string;
   label: string;
   description?: string;
+  /** Search query for a "Get Directions" link. Omit for options that aren't an actual place (e.g. "Skip entirely"). */
+  mapQuery?: string;
+  /** Google rating snapshot taken at planning time — may drift slightly by trip date. */
+  rating?: Rating;
 };
 
 export type Choice = {
@@ -10,16 +19,53 @@ export type Choice = {
   options: ChoiceOption[];
 };
 
+export type ActivityItem =
+  | string
+  | {
+      text: string;
+      /** Exact substring of `text` to highlight and link. */
+      place: string;
+      /** Search query for a "Get Directions" link. */
+      mapQuery: string;
+    };
+
 export type Section = {
   id: string;
   heading: string;
-  items?: string[];
+  items?: ActivityItem[];
   note?: string;
   choice?: Choice;
   anchor?: boolean;
 };
 
 export type MealPeriod = "Breakfast" | "Lunch" | "Dinner";
+
+export type MenuItem = {
+  name: string;
+  original?: string;
+  price?: string;
+};
+
+export type MenuSection = {
+  section: string;
+  items: MenuItem[];
+};
+
+export type Reservation = {
+  venue: string;
+  time?: string;
+  mapQuery?: string;
+  note?: string;
+  menu?: MenuSection[];
+  rating?: Rating;
+};
+
+export type Venue = {
+  name: string;
+  description?: string;
+  mapQuery?: string;
+  rating?: Rating;
+};
 
 export type MealSlot = {
   period: MealPeriod;
@@ -28,6 +74,10 @@ export type MealSlot = {
   choice?: Choice;
   /** Plain description shown instead of a choice (e.g. "wander the market and grab whatever looks good"). */
   note?: string;
+  /** A single locked-in venue with no picking, shown with a bolded name, rating, and description. */
+  venue?: Venue;
+  /** A locked-in reservation with no picking — shows the venue and an optional translated menu. */
+  reservation?: Reservation;
 };
 
 export type Day = {
@@ -37,98 +87,87 @@ export type Day = {
   subtitle: string;
   vibe?: string;
   isAnniversary?: boolean;
+  /** ISO date (YYYY-MM-DD) — nav link stays visible but unclickable until this date arrives. */
+  unlockDate?: string;
   sections: Section[];
   meals?: MealSlot[];
 };
 
 export const tripDates = "June 25 – June 29";
 
-export const corePrinciples = [
-  "No rushed scheduling",
-  "Minimal advance ticket requirements",
-  "Transit only when necessary (Metro preferred)",
-  "Flexibility based on weather and energy",
-  "Focus on atmosphere, food, and shared experience over checklists",
-];
-
-export const anchorExperiences = [
-  "Botanical Garden",
-  "Biodome",
-  "Anniversary Day dinner",
-];
-
-export const flexibilityNotes = [
-  "Extend Little Italy or Jean-Talon Market if desired",
-  "Skip the optional museum entirely",
-  "Shorten Plateau wandering based on energy",
-  "Adjust pacing due to weather or fatigue",
-];
+export function isDayLocked(day: Day) {
+  if (!day.unlockDate) return false;
+  const today = new Date().toISOString().slice(0, 10);
+  return today < day.unlockDate;
+}
 
 export const days: Day[] = [
   {
     id: 1,
     date: "June 25",
-    title: "Gentle Arrival + First Impression",
-    subtitle: "Arrival Evening",
-    vibe: "Easy introduction to the city, no structured sightseeing.",
+    title: "Day 1 Exploration",
+    subtitle: "Neighborhood Walk",
+    vibe: "Casually walk around and explore close by.",
     sections: [
       {
         id: "d1-evening",
         heading: "Evening Plan",
         items: [
           "Arrive and check in",
-          "Light walk in Old Montréal",
-          "Explore cobblestone streets and waterfront",
+          "Casually walk around and explore the neighborhood near the AirBnb",
+          "Stop by a metro station to check out weekend passes",
         ],
       },
     ],
     meals: [
       {
         period: "Dinner",
-        choice: {
-          id: "day1-dinner",
-          prompt: "First night in Old Montréal — where should we eat?",
-          options: [
-            {
-              id: "modavie",
-              label: "Modavie",
-              description: "French/Mediterranean bistro on Saint-Paul St., live jazz most nights",
-            },
-            {
-              id: "bevo",
-              label: "Bevo",
-              description: "Buzzy, casual Italian — brick walls, no-fuss pizza",
-            },
-            {
-              id: "marche-eclusiers",
-              label: "Marché des Éclusiers",
-              description: "Waterfront food hall — local vendors, gourmet tacos, shareable bites",
-            },
-          ],
-        },
+        note: "No plan — wander the neighborhood and see what looks good.",
       },
     ],
   },
   {
     id: 2,
     date: "June 26",
-    title: "Little Italy + Jean-Talon Market + Plateau Evening",
+    title: "Little Italy + Jean-Talon Market + Old Montréal Evening",
     subtitle: "Markets & Neighborhoods",
     sections: [
       {
         id: "d2-morning",
         heading: "Morning — Little Italy",
-        items: ["Slow walk through Italian cafés and bakeries", "Light neighborhood exploration"],
+        items: ["Wander around Montreal's Little Italy. Explore shops and food authentic to that area"],
       },
       {
         id: "d2-midday",
         heading: "Midday — Jean-Talon Market",
-        items: ["Fresh produce market experience", "Local cheeses, baked goods, and food stalls"],
+        items: ["Experience Montreal's take on a farmer's market"],
       },
       {
         id: "d2-afternoon",
-        heading: "Afternoon Exploring — Plateau Mont-Royal",
-        items: ["Street art and murals", "Small cafés and shops", "Relaxed walking, no fixed route"],
+        heading: "Afternoon/Evening Exploring — Old Montréal",
+        items: [
+          "A rich repository of history as a port and a maritime, technological, and industrial site.",
+          {
+            text: "Place Royale (where the City of Montréal was founded)",
+            place: "Place Royale",
+            mapQuery: "Place Royale, Montreal, QC",
+          },
+          {
+            text: "“The Main” National Historic Site (Saint-Laurent Boulevard)",
+            place: "“The Main” National Historic Site",
+            mapQuery: "Saint-Laurent Boulevard, Montreal, QC",
+          },
+          {
+            text: "Lachine Canal National Historic Site.",
+            place: "Lachine Canal National Historic Site",
+            mapQuery: "Lachine Canal National Historic Site, Montreal, QC",
+          },
+          {
+            text: "Clock Tower, was erected between 1919 and 1922 to mark the entrance to the port and commemorate the sailors who were lost at sea during the First World War.",
+            place: "Clock Tower",
+            mapQuery: "Clock Tower, Old Port of Montreal, QC",
+          },
+        ],
       },
     ],
     meals: [
@@ -142,44 +181,53 @@ export const days: Day[] = [
               id: "caffe-italia",
               label: "Caffè Italia",
               description: "Institution since 1956 — espresso, eggs Benedict, cannoli",
+              mapQuery: "Caffè Italia, Montreal, QC",
+              rating: { score: 4.7 },
             },
             {
               id: "parma-cafe",
               label: "Parma Café",
               description: "Cozy spot near Jean-Talon Market, great coffee and sandwiches",
-            },
-            {
-              id: "antipode",
-              label: "Antipode",
-              description: "Lively brunch — eggs Benedict, croque tartiflette, shakshuka",
+              mapQuery: "Parma Café, Montreal, QC",
+              rating: { score: 4.4, count: "400+" },
             },
           ],
         },
       },
       {
         period: "Lunch",
-        note: "Casual lunch from Jean-Talon Market vendors — wander the stalls and grab whatever looks good.",
+        venue: {
+          name: "Jean-Talon Market",
+          description:
+            "Located in the heart of Little Italy, the Jean-Talon Market is one of the biggest in North America. It's open year-round, so Montrealers can discover the expertise of our producers and artisans in summer and winter alike. One of the oldest public markets in Montreal, it was inaugurated in May 1933 with the aim of feeding the local population with fresh, local agri-food products, a mission that is still relevant today.",
+          mapQuery: "Jean-Talon Market, Montreal, QC",
+          rating: { score: 4.6, count: "32,667" },
+        },
       },
       {
         period: "Dinner",
         choice: {
           id: "day2-dinner",
-          prompt: "Casual dinner in the Plateau — pick a spot:",
+          prompt: "Dinner near the Old Montréal waterfront — pick a spot:",
           options: [
             {
-              id: "chez-victoire",
-              label: "Chez Victoire",
-              description: "French-inspired seasonal market cuisine, smoked-meat burger",
+              id: "seasalt",
+              label: "SeaSalt",
+              description: "Seafood right on the waterfront — oysters, ceviche, lively Old Port patio",
+              mapQuery: "SeaSalt, Montreal, QC",
+              rating: { score: 4.2 },
             },
             {
-              id: "bungalow",
-              label: "Bungalow",
-              description: "Neighborhood favorite — Québécois, French, and Mediterranean flavors",
+              id: "vieux-port-steakhouse",
+              label: "Vieux-Port Steakhouse",
+              description: "Montreal institution since 1983 — AAA aged beef in a cozy stone-and-fireplace building",
+              mapQuery: "Vieux-Port Steakhouse, Montreal, QC",
+              rating: { score: 4.4 },
             },
             {
-              id: "le-ptit-plateau",
-              label: "Le P'tit Plateau",
-              description: "Cozy regional French bistro with a personal touch",
+              id: "wing-it",
+              label: "Walk around and pick on the fly",
+              description: "No plan — see what looks good while wandering the waterfront",
             },
           ],
         },
@@ -189,116 +237,75 @@ export const days: Day[] = [
   {
     id: 3,
     date: "June 27",
-    title: "Botanical Garden + Biodome + Flexible Evening",
+    title: "Botanical Garden + Flexible Evening",
     subtitle: "Nature Day",
     sections: [
       {
         id: "d3-morning",
-        heading: "Morning — Botanical Garden",
-        anchor: true,
-        items: ["Themed gardens and greenhouses", "Slow walking and photography", "Relaxed exploration"],
-      },
-      {
-        id: "d3-midday",
-        heading: "Midday Break",
-        items: ["Rest period (no fixed plan)"],
-      },
-      {
-        id: "d3-afternoon",
-        heading: "Afternoon — Biodome",
-        anchor: true,
+        heading: "Morning — Botanical Garden (10:00AM Admission Time)",
         items: [
-          "Indoor ecosystems (rainforest, arctic, marine environments)",
-          "Immersive but low-effort experience",
+          "A greenhouse complex full of plants from around the world",
+          "A place to conserve endangered plant species",
+          "It was designated a National Historic Site of Canada in 2008 as it is considered to be one of the most important botanical gardens in the world due to the extent of its collections and facilities.",
         ],
       },
       {
-        id: "d3-addon",
-        heading: "Optional Add-On (Based on Energy)",
-        note: "Choose based on mood:",
+        id: "d3-post-garden",
+        heading: "Post-Botanical Garden",
         choice: {
-          id: "day3-addon",
-          prompt: "What sounds good after the Biodome?",
+          id: "day3-post-garden",
+          prompt: "What's the move after the gardens?",
           options: [
-            { id: "science", label: "Science center" },
-            { id: "arts", label: "Fine arts museum" },
+            { id: "rest-up", label: "Rest up" },
             {
-              id: "skip",
-              label: "Skip entirely",
-              description: "Rest and recharge instead",
+              id: "mont-royal-park",
+              label: "Take the trip to Mont Royal Park",
+              description: "Before a delicious dinner at Au Pied de Cochon",
+              mapQuery: "Mount Royal Park, Montreal, QC",
             },
           ],
         },
-      },
-      {
-        id: "d3-evening",
-        heading: "Evening — Return to Plateau",
-        items: ["Relaxed neighborhood walk"],
       },
     ],
     meals: [
       {
         period: "Breakfast",
-        choice: {
-          id: "day3-breakfast",
-          prompt: "Quick breakfast before the Botanical Garden — pick a spot:",
-          options: [
-            { id: "cafe-replika", label: "Café Replika" },
-            { id: "pigeon-cafe", label: "Pigeon Cafe" },
-            {
-              id: "piel-canela",
-              label: "Piel Canela",
-              description: "Festive brunch spot — mimosas included",
-            },
-          ],
+        venue: {
+          name: "Canard Café",
+          description:
+            "Located in the heart of three Montreal neighborhoods, Canard Café is a unique space dedicated to specialty coffee lovers. Our mission: to offer ethical, flavorful, and locally sourced coffee in a warm and welcoming atmosphere. Whether you're a fan of latte art, a simple filter coffee, or eager to discover new flavors, our passionate team will guide you.",
+          mapQuery: "Canard Café, 4299 Ontario St E, Montreal, Quebec H1V 1K4, Canada",
+          rating: { score: 4.5, count: "1,539" },
         },
       },
       {
         period: "Lunch",
         choice: {
           id: "day3-lunch",
-          prompt: "Lunch between the Botanical Garden and Biodome — pick a spot:",
+          prompt: "Lunch after the Botanical Garden — pick a spot:",
           options: [
             {
               id: "espace-pour-la-vie",
               label: "Espace pour la vie restaurant",
               description: "On-site, vegetarian, seasonal — no need to leave the gardens",
+              mapQuery: "Montreal Botanical Garden, Montreal, QC",
+              rating: { score: 4.0, count: "1k+" },
             },
             {
-              id: "le-toit-rouge",
-              label: "Le Toit Rouge",
-              description: "Casual neighborhood spot right between the two attractions",
-            },
-            {
-              id: "helicoptere",
-              label: "Hélicoptère",
-              description: "If you want a proper sit-down meal — seasonal Hochelaga tasting menu",
+              id: "plateau-wander",
+              label: "Head to the Plateau and find something that catches our eye",
             },
           ],
         },
       },
       {
         period: "Dinner",
-        choice: {
-          id: "day3-dinner",
-          prompt: "Back in the Plateau for dinner — pick a spot:",
-          options: [
-            {
-              id: "au-pied-de-cochon",
-              label: "Au Pied de Cochon",
-              description: "Montreal institution — foie gras and pork, iconic Québécois indulgence",
-            },
-            {
-              id: "rotisserie-la-lune",
-              label: "Rôtisserie La Lune",
-              description: "Casual rotisserie chicken bistro from the Mon Lapin team",
-            },
-            {
-              id: "barranco",
-              label: "Barranco",
-              description: "Warm Peruvian spot — ceviche, colorful setting, change of pace",
-            },
-          ],
+        venue: {
+          name: "Au Pied de Cochon",
+          description:
+            "The Au Pied de Cochon restaurant is where it all began. Passed from one generation to the next, family knowledge contributes to the restaurant's reputation. Constantly evolving, the Pied de Cochon celebrates its 20th anniversary in November 2021. This à la carte restaurant is located in the heart of the Plateau Mont-Royal. Authentic to its Quebec and Canadian roots, the dishes are hearty and comforting. Adopting the style from French brasseries, the chef and his team draw inspiration from local and seasonal products to create a timeless menu.",
+          mapQuery: "Au Pied de Cochon, Montreal, QC",
+          rating: { score: 4.5, count: "3,743" },
         },
       },
     ],
@@ -311,45 +318,16 @@ export const days: Day[] = [
     isAnniversary: true,
     sections: [
       {
-        id: "d4-morning",
-        heading: "Morning",
-        items: ["No schedule"],
-      },
-      {
-        id: "d4-midday",
-        heading: "Midday",
-        items: ["Free wandering in Plateau or Mile End", "Parks and casual exploration", "Entirely mood-based"],
-      },
-      {
-        id: "d4-afternoon",
-        heading: "Afternoon (Optional)",
-        note: "Choose based on energy:",
+        id: "d4-pre-dinner",
+        heading: "Pre-dinner day",
         choice: {
-          id: "day4-afternoon",
-          prompt: "How do you want to spend the afternoon before our dinner?",
+          id: "day4-pre-dinner",
+          prompt: "How do we want to spend the day before dinner?",
           options: [
-            {
-              id: "old-montreal",
-              label: "Old Montréal walk",
-              description: "Cobblestone streets + waterfront",
-            },
-            {
-              id: "mount-royal",
-              label: "Mount Royal viewpoint",
-              description: "Skyline views",
-            },
-            {
-              id: "rest-recharge",
-              label: "Rest and Recharge",
-              description: "Head back to the BnB and chill",
-            },
+            { id: "rest", label: "Catch up on rest" },
+            { id: "revisit", label: "Revisit previous areas", description: "Plateau, Old Montreal, Little Italy" },
           ],
         },
-      },
-      {
-        id: "d4-post",
-        heading: "Post-Dinner",
-        items: ["Slow walk through Plateau streets"],
       },
     ],
     meals: [
@@ -363,65 +341,123 @@ export const days: Day[] = [
               id: "st-viateur-bagel",
               label: "St-Viateur Bagel",
               description: "The original, wood-fired, since 1957",
+              mapQuery: "St-Viateur Bagel, Montreal, QC",
+              rating: { score: 4.6, count: "8.8k+" },
             },
             {
               id: "fairmount-bagel",
               label: "Fairmount Bagel",
               description: "The oldest bagel shop in Montreal, since 1919",
+              mapQuery: "Fairmount Bagel, Montreal, QC",
+              rating: { score: 4.4 },
             },
             {
               id: "beautys",
               label: "Beautys Luncheonette",
               description: "Iconic diner since 1942 — try the Beauty Special",
+              mapQuery: "Beautys Luncheonette, Montreal, QC",
+              rating: { score: 4.1, count: "1.8k+" },
             },
           ],
         },
       },
       {
         period: "Lunch",
-        choice: {
-          id: "day4-lunch",
-          prompt: "Wherever the wandering takes us — pick a lunch vibe:",
-          options: [
-            {
-              id: "sparrow",
-              label: "Sparrow",
-              description: "Middle Eastern-leaning brunch — Turkish eggs, shakshuka",
-            },
-            {
-              id: "aux-vivres",
-              label: "Aux Vivres",
-              description: "Montreal's beloved vegan spot — Golden Pancakes, smoothies",
-            },
-            {
-              id: "falafel-yoni",
-              label: "Falafel Yoni",
-              description: "Quick falafel counter, great Sabich sandwich",
-            },
-          ],
+        venue: {
+          name: "Wherever the wind takes us",
+          description:
+            "Did anything catch our eye somewhere? If so, let's circle back to something we wanted to try. If not, let's find something new!",
         },
       },
       {
         period: "Dinner",
         anchor: true,
-        choice: {
-          id: "day4-dinner",
-          prompt: "Tonight's the big one — our cozy, intimate anniversary dinner. Pick the spot:",
-          options: [
+        reservation: {
+          venue: "Casavant",
+          time: "8:30 PM",
+          mapQuery: "Casavant restaurant, Montreal, QC",
+          rating: { score: 4.8, count: "400+" },
+          note: "Tonight's the big one — our cozy, intimate anniversary dinner. Just show up and enjoy.",
+          menu: [
             {
-              id: "lexpress",
-              label: "L'Express",
-              description: "Montreal institution since 1980 — classic French bistro, steak tartare",
+              section: "To Start",
+              items: [
+                {
+                  name: "Autumn bread, flower butter",
+                  original: "Pain d'automne, beurre aux fleurs",
+                  price: "$9",
+                },
+                {
+                  name: "Asparagus & sucrine lettuce salad, buttermilk vinaigrette",
+                  original: "Salade d'asperge & sucrine, vinaigrette au babeurre",
+                  price: "$19",
+                },
+                {
+                  name: "Beef tartare, smoked mackerel",
+                  original: "Tartare de bœuf, maquereau fumé",
+                  price: "$25",
+                },
+                {
+                  name: "Fresh scallops, Pascal's chorizo",
+                  original: "Pétoncles frais, chorizo de Pascal",
+                  price: "$27",
+                },
+                {
+                  name: "Stuffed morels, green peas & vin jaune",
+                  original: "Morilles farcies, pois verts & vin jaune",
+                  price: "$25",
+                },
+                {
+                  name: "Tomato tartlet, sardines, Comté & fresh herbs",
+                  original: "Tartelette aux tomates, sardines, Comté & fines herbes",
+                  price: "$21",
+                },
+              ],
             },
             {
-              id: "casavant",
-              label: "Casavant",
-              description: "Intimate Art Deco French bistro — beef tartare, seasonal tartelette",
+              section: "Mains",
+              items: [
+                {
+                  name: "Hanger steak, chanterelles, fiddleheads & brown butter",
+                  original: "Onglet de bœuf, chanterelles, têtes de violon & beurre noisette",
+                  price: "$39",
+                },
+                {
+                  name: "Black paccheri pasta with lobster, tomato bisque & pea shoots",
+                  original: "Paccheri neri au homard, bisque tomatée & feuilles de pois",
+                  price: "$48",
+                },
+                {
+                  name: "Sea bass à la Grenobloise",
+                  original: "Bar à la grenobloise",
+                  price: "$33",
+                },
+                {
+                  name: "Duck breast, Quebec asparagus & sea buckthorn",
+                  original: "Magret de canard, asperges du Québec & argousier",
+                  price: "$38",
+                },
+              ],
             },
             {
-              id: "estelle",
-              label: "Estelle",
-              description: "Contemporary Plateau bistro — sleek, seasonal, curated wine list",
+              section: "Dessert",
+              items: [
+                {
+                  name: "Chocolate mousse & black sesame",
+                  original: "Mousse au chocolat & sésame noir",
+                  price: "$13",
+                },
+                {
+                  name: "Maple cake, sweet clover ice cream",
+                  original: "Gâteau à l'érable, glace mélilot",
+                  price: "$17",
+                },
+                {
+                  name: "Cheese plate",
+                  original: "Assiette de fromages",
+                  price: "$9 / $21",
+                },
+              ],
             },
           ],
         },
@@ -433,6 +469,7 @@ export const days: Day[] = [
     date: "June 29",
     title: "Quiet Exit",
     subtitle: "Departure Morning",
+    unlockDate: "2026-06-29",
     sections: [
       {
         id: "d5-morning",
@@ -451,16 +488,22 @@ export const days: Day[] = [
               id: "dispatch-coffee",
               label: "Dispatch Coffee",
               description: "Great cold brew and pastries, Plateau location",
+              mapQuery: "Dispatch Coffee, Montreal, QC",
+              rating: { score: 4.3 },
             },
             {
               id: "cafe-olimpico",
               label: "Café Olimpico",
               description: "Legendary Mile End espresso bar",
+              mapQuery: "Café Olimpico, Montreal, QC",
+              rating: { score: 4.7, count: "3k+" },
             },
             {
               id: "la-distributrice",
               label: "La Distributrice",
-              description: "Tiny grab-and-go window near Mont-Royal metro — fastest if we're rushing",
+              description: "Tiny grab-and-go window near Mont-Royal metro — fastest if we're rushing (double-check it's still open before counting on it)",
+              mapQuery: "La Distributrice, Montreal, QC",
+              rating: { score: 4.7, count: "129" },
             },
           ],
         },
@@ -488,14 +531,3 @@ export const foodIdentity = {
   closing:
     "Plus strong immigrant food influence including Italian, Middle Eastern, Vietnamese, and Caribbean traditions.",
 };
-
-export const finalNotes = [
-  "Minimize stress and decision fatigue",
-  "Prioritize shared experience over checklist tourism",
-  "Allow spontaneous adjustments",
-  "Support a meaningful anniversary centerpiece",
-  "Keep the focus on presence, not planning",
-];
-
-export const finalQuote =
-  "The best experiences in Montréal often come from unplanned wandering, café stops, and neighborhood exploration.";

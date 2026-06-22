@@ -28,12 +28,36 @@ export function ActivityCard({ section }: { section: Section }) {
           {section.note && <p className={styles.note}>{section.note}</p>}
           {section.items && (
             <ul className={styles.items}>
-              {section.items.map((item) => (
-                <li key={item} className={styles.item}>
-                  <span className={styles.dot} />
-                  <span>{item}</span>
-                </li>
-              ))}
+              {section.items.map((item) => {
+                if (typeof item === "string") {
+                  return (
+                    <li key={item} className={styles.item}>
+                      <span className={styles.dot} />
+                      <span>{item}</span>
+                    </li>
+                  );
+                }
+                const start = item.text.indexOf(item.place);
+                const before = start >= 0 ? item.text.slice(0, start) : item.text;
+                const after = start >= 0 ? item.text.slice(start + item.place.length) : "";
+                return (
+                  <li key={item.text} className={styles.item}>
+                    <span className={styles.dot} />
+                    <span>
+                      {before}
+                      <a
+                        className={styles.placeLink}
+                        href={`https://maps.apple.com/?q=${encodeURIComponent(item.mapQuery)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {item.place}
+                      </a>
+                      {after}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           )}
           {section.choice && <ChoicePicker choice={section.choice} />}

@@ -1,0 +1,128 @@
+.wrapper {
+  border-radius: 0.75rem;
+  background-color: var(--color-harbor-50);
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  border-radius: 999px;
+  background-color: var(--color-copper-500);
+  color: white;
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.venue {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--color-harbor-900);
+  margin: 0;
+}
+
+.time {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-copper-600);
+}
+
+.note {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-harbor-700);
+}
+
+.actions {
+  margin-top: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.actionLink {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-copper-600);
+  text-decoration: none;
+}
+
+.actionLink:hover {
+  text-decoration: underline;
+}
+
+.actionButton {
+  border: 1px solid var(--color-harbor-200);
+  background-color: white;
+  color: var(--color-harbor-700);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.actionButton:hover {
+  border-color: var(--color-copper-300);
+}
+
+.menu {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-parchment-300);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.menuSectionTitle {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-copper-600);
+  margin: 0 0 0.625rem;
+}
+
+.menuItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.menuItemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.menuItemName {
+  color: var(--color-harbor-800);
+  font-size: 0.92rem;
+}
+
+.menuItemPrice {
+  flex-shrink: 0;
+  color: var(--color-harbor-500);
+  font-size: 0.85rem;
+}
+
+.menuItemOriginal {
+  display: block;
+  margin-top: 0.125rem;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--color-harbor-400);
+}

@@ -52,3 +52,27 @@
   color: var(--color-harbor-600);
   margin: 0;
 }
+
+.venue {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.venueName {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--color-harbor-900);
+  margin: 0;
+}
+
+.venueLink {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-copper-600);
+  text-decoration: none;
+}
+
+.venueLink:hover {
+  text-decoration: underline;
+}
